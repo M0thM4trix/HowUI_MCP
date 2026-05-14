@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "howui": {
+      "command": "npx",
+      "args": ["-y", "github:M0thM4trix/HowUI_MCP"],
+      "env": {
+        "HOWUI_API_URL": "https://howui.ru/api",
+        "HOWUI_API_TOKEN": "hui_mcp_ваш_токен"
+      }
+    }
+  }
+}
