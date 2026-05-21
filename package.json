@@ -1,7 +1,7 @@
 {
   "name": "howui-mcp-server",
-  "version": "1.0.0",
-  "description": "MCP-сервер HowUI для подключения UI-элементов к IDE и AI-агентам.",
+  "version": "1.1.0",
+  "description": "HowUI MCP server for asset search, preview URLs, source code access, personal boards, and implementation context.",
   "type": "module",
   "bin": {
     "howui-mcp": "./src/server.js",
@@ -9,10 +9,13 @@
   },
   "scripts": {
     "start": "node src/server.js",
-    "check": "node --check src/server.js && node src/server.js --help"
+    "check": "node --check src/server.js",
+    "test": "node scripts/smoke-test.mjs",
+    "smoke": "node scripts/smoke-test.mjs"
   },
   "files": [
     "src",
+    "scripts",
     "README.md",
     "LICENSE",
     ".env.example",
@@ -33,12 +36,12 @@
     "url": "https://github.com/M0thM4trix/HowUI_MCP/issues"
   },
   "homepage": "https://github.com/M0thM4trix/HowUI_MCP#readme",
-  "engines": {
-    "node": ">=20"
-  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
-    "zod": "^4.1.12"
+    "zod": "^3.25.28 || ^4.0.0"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "license": "MIT",
   "private": false

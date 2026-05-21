@@ -1,47 +1,30 @@
 # HowUI MCP Server
 
-MCP-сервер для подключения библиотеки HowUI к IDE и AI-агентам.
+MCP server for connecting HowUI assets, saved boards, source snippets, preview URLs, and implementation context to IDE agents.
 
-Сервер работает через `stdio`: IDE запускает этот пакет как локальный процесс, передает ему MCP-запросы, а сервер обращается к публичному HowUI API с вашим MCP-токеном.
+The server runs over `stdio`. An MCP client starts this package as a local process, sends MCP requests to it, and the server calls the HowUI API with the user's MCP token.
 
-## Возможности
+## Requirements
 
-- поиск UI-элементов HowUI по запросу, категории, типу и уровню доступа;
-- получение метаданных элемента;
-- получение исходного кода элемента;
-- получение ссылки на preview;
-- просмотр досок пользователя;
-- сохранение элемента в доску.
+- Node.js 20 or newer
+- HowUI MCP token
+- MCP-compatible IDE or client
 
-## Требования
-
-- Node.js `20` или выше;
-- MCP-токен HowUI;
-- IDE или клиент с поддержкой MCP.
-
-## Быстрый запуск
+## Quick Start
 
 ```bash
-npx -y github:M0thM4trix/HowUI_MCP
+HOWUI_API_TOKEN=hui_mcp_your_token npx -y github:M0thM4trix/HowUI_MCP
 ```
 
-Для работы сервера нужен токен:
-
-```bash
-HOWUI_API_TOKEN=hui_mcp_ваш_токен npx -y github:M0thM4trix/HowUI_MCP
-```
-
-По умолчанию используется API:
+Default API URL:
 
 ```bash
 https://howui.ru/api
 ```
 
-Если нужен другой адрес API, задайте `HOWUI_API_URL`.
+Set `HOWUI_API_URL` only when you need a different API endpoint.
 
-## Cursor
-
-Добавьте сервер в конфиг MCP:
+## Cursor Config
 
 ```json
 {
@@ -51,16 +34,14 @@ https://howui.ru/api
       "args": ["-y", "github:M0thM4trix/HowUI_MCP"],
       "env": {
         "HOWUI_API_URL": "https://howui.ru/api",
-        "HOWUI_API_TOKEN": "hui_mcp_ваш_токен"
+        "HOWUI_API_TOKEN": "hui_mcp_your_token"
       }
     }
   }
 }
 ```
 
-## Claude Desktop
-
-Пример `claude_desktop_config.json`:
+## Claude Desktop Config
 
 ```json
 {
@@ -70,65 +51,96 @@ https://howui.ru/api
       "args": ["-y", "github:M0thM4trix/HowUI_MCP"],
       "env": {
         "HOWUI_API_URL": "https://howui.ru/api",
-        "HOWUI_API_TOKEN": "hui_mcp_ваш_токен"
+        "HOWUI_API_TOKEN": "hui_mcp_your_token"
       }
     }
   }
 }
 ```
 
-## Локальная установка
+## Codex Config
+
+```toml
+[mcp_servers.howui]
+command = "npx"
+args = ["-y", "github:M0thM4trix/HowUI_MCP"]
+
+[mcp_servers.howui.env]
+HOWUI_API_URL = "https://howui.ru/api"
+HOWUI_API_TOKEN = "hui_mcp_your_token"
+```
+
+## Environment
+
+| Variable | Required | Value |
+| --- | --- | --- |
+| `HOWUI_API_TOKEN` | yes | MCP token from HowUI |
+| `HOWUI_API_URL` | no | API URL. Defaults to `https://howui.ru/api` |
+
+Do not commit real MCP tokens into any repository. Put tokens only in the local MCP client config or environment variables.
+
+## Tools
+
+- `howui_search_assets`
+- `howui_search_blocks`
+- `howui_list_asset_facets`
+- `howui_get_asset`
+- `howui_get_asset_bundle`
+- `howui_get_asset_source`
+- `howui_get_asset_preview`
+- `howui_get_embed_snippet`
+- `howui_list_boards`
+- `howui_create_board`
+- `howui_get_board`
+- `howui_save_asset`
+- `howui_remove_asset_from_board`
+- `howui_prepare_design_context`
+
+## Prompts
+
+- `howui_find_blocks`
+- `howui_build_from_board`
+- `howui_extend_existing_screen`
+- `howui_embed_asset_preview`
+
+These prompts instruct an agent which HowUI tools to call and how to use returned metadata, source snippets, preview URLs, runtime data, and saved board references.
+
+## Resources
+
+| Resource | Value |
+| --- | --- |
+| `howui://assets/{assetId}/manifest` | Asset metadata |
+| `howui://assets/{assetId}/source` | Asset source code |
+| `howui://assets/{assetId}/preview` | Preview URL data |
+| `howui://assets/{assetId}/bundle` | Metadata, preview URL, runtime, format |
+| `howui://boards/{boardId}` | Saved board data |
+
+## Local Development
 
 ```bash
 git clone https://github.com/M0thM4trix/HowUI_MCP.git
 cd HowUI_MCP
 npm install
-HOWUI_API_TOKEN=hui_mcp_ваш_токен npm start
+npm test
+HOWUI_API_TOKEN=hui_mcp_your_token npm start
 ```
 
-## Переменные окружения
-
-| Переменная | Обязательная | Значение |
-| --- | --- | --- |
-| `HOWUI_API_TOKEN` | да | MCP-токен из HowUI |
-| `HOWUI_API_URL` | нет | Адрес API. По умолчанию `https://howui.ru/api` |
-
-Не коммитьте реальные токены в репозиторий. Используйте переменные окружения в конфиге IDE.
-
-## Инструменты MCP
-
-| Инструмент | Назначение |
-| --- | --- |
-| `howui_search_assets` | Найти элементы HowUI |
-| `howui_get_asset` | Получить метаданные элемента |
-| `howui_get_asset_source` | Получить исходный код элемента |
-| `howui_get_asset_preview` | Получить ссылку на preview |
-| `howui_list_boards` | Получить список досок |
-| `howui_save_asset` | Сохранить элемент в доску |
-
-## Ресурсы MCP
-
-| Ресурс | Назначение |
-| --- | --- |
-| `howui://assets/{assetId}/manifest` | Метаданные элемента |
-| `howui://assets/{assetId}/source` | Исходный код элемента |
-| `howui://assets/{assetId}/preview` | Данные preview |
-
-## Проверка установки
+## Checks
 
 ```bash
 npm run check
+npm test
 ```
 
-Команда проверяет синтаксис сервера и вывод справки.
+`npm test` starts the MCP server locally and verifies the registered tools and prompts without calling the HowUI API.
 
-## Безопасность
+## Security
 
-- В репозитории нет приватных токенов, ключей, cookies или локальных файлов проекта.
-- Сервер не хранит токен на диске.
-- Токен передается только в HowUI API через заголовок `Authorization`.
-- В публичные примеры добавлены только placeholder-значения.
+- The repository contains no private tokens, cookies, local databases, or HowUI backend/admin/web source code.
+- The server does not store the MCP token on disk.
+- The token is read from environment variables and sent only to the configured HowUI API through the `Authorization` header.
+- Public examples use placeholder token values only.
 
-## Лицензия
+## License
 
 MIT
